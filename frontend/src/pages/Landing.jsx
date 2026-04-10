@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import {
   ArrowRight, Shield, Lock, Globe, Zap, Eye,
   Cpu, ChevronRight, CheckCircle, Star,
-  Fingerprint, Activity, MousePointer
+  Fingerprint, Activity, MousePointer, Download
 } from 'lucide-react';
 import * as THREE from 'three';
 import Navbar from '../components/layout/Navbar';

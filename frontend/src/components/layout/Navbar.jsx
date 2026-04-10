@@ -10,9 +10,7 @@ import { userApi } from '../../api';
 import { useQuery } from '@tanstack/react-query';
 
 const NAV_LINKS = [
-  { label: 'Servers', href: '/servers' },
   { label: 'Pricing', href: '/pricing' },
-  { label: 'Tools', href: '/tools' },
   { label: 'Blog', href: '/blog' },
   { label: 'Download', href: '/download' },
 ];

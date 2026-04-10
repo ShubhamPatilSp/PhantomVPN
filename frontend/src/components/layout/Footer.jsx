@@ -5,13 +5,9 @@ const LINKS = {
   Product: [
     { label: 'Features', href: '/#features' },
     { label: 'Pricing', href: '/pricing' },
-    { label: 'Servers', href: '/servers' },
     { label: 'Download', href: '/download' },
   ],
-  Privacy: [
-    { label: 'Leak Test', href: '/leak-test' },
-    { label: 'IP Checker', href: '/tools' },
-    { label: 'DNS Test', href: '/tools' },
+  Resources: [
     { label: 'Blog', href: '/blog' },
   ],
   Company: [

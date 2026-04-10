@@ -20,6 +20,7 @@ const setupGoogleOAuth = () => {
         clientSecret: config.google.clientSecret,
         callbackURL: config.google.callbackUrl,
         scope: ['profile', 'email'],
+        proxy: true,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

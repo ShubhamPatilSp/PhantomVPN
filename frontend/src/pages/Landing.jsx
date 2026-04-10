@@ -208,6 +208,8 @@ function TestimonialCard({ name, role, text }) {
 //  LANDING PAGE
 // ══════════════════════════════════════════════════════════════════
 export default function Landing() {
+  const isDesktop = !!window.electronAPI;
+
   return (
     <div className="min-h-screen bg-[#050508] overflow-x-hidden">
       <Navbar />
@@ -259,9 +261,9 @@ export default function Landing() {
                   Get started — it&apos;s free
                   <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
                 </Link>
-                <Link to="/servers" className="btn-secondary text-sm px-7 py-3.5">
-                  <Globe size={15} />
-                  Browse servers
+                <Link to={isDesktop ? "/servers" : "/download"} className="btn-secondary text-sm px-7 py-3.5">
+                  {isDesktop ? <Globe size={15} /> : <Download size={15} />}
+                  {isDesktop ? 'Browse servers' : 'Download Now'}
                 </Link>
               </div>
 

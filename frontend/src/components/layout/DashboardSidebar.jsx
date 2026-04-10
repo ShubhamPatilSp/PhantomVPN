@@ -34,7 +34,16 @@ export default function DashboardSidebar({ isAdmin = false }) {
   const { user, logout } = useAuthStore();
   const { connected } = useVpnStore();
 
-  const nav = isAdmin ? ADMIN_NAV : USER_NAV;
+  const isDesktop = !!window.electronAPI;
+
+  const validNav = isAdmin ? ADMIN_NAV : USER_NAV.filter(item => {
+    if (!isDesktop) {
+      return !['/servers', '/tools', '/leak-test', '/dashboard'].includes(item.href);
+    }
+    return true;
+  });
+
+  const nav = validNav;
 
   const handleLogout = async () => {
     await logout();

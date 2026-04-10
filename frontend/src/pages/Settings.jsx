@@ -307,6 +307,7 @@ function ReferralsTab({ user }) {
 
 // ── Downloads Tab ─────────────────────────────────────────────────
 function DownloadsTab() {
+  const isDesktop = !!window.electronAPI;
   const { data: serversData } = useQuery({
     queryKey: ['servers', 'config'],
     queryFn: () => userApi.getProfile().then(() =>
@@ -319,21 +320,30 @@ function DownloadsTab() {
       <div className="glass-card p-6">
         <h3 className="font-bold mb-4 flex items-center gap-2"><Download size={16} className="text-[#6C63FF]" /> WireGuard Config Files</h3>
         <p className="text-sm text-white/50 mb-5">Download WireGuard configuration files for manual setup on any compatible device or router.</p>
-        {serversData?.servers?.slice(0, 5).map(server => (
-          <div key={server._id} className="flex items-center justify-between py-2.5 border-b border-white/[0.05] last:border-0">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">{server.flag}</span>
-              <div>
-                <p className="text-sm font-medium">{server.city}, {server.country}</p>
-                <p className="text-xs text-white/30">{server.ping}ms · WireGuard</p>
-              </div>
-            </div>
-            <a href={`/api/vpn/config/${server._id}`} className="btn-ghost text-xs border border-white/[0.08] px-3 py-1.5">
-              <Download size={12} /> .conf
-            </a>
+        {!isDesktop ? (
+          <div className="p-4 rounded-xl bg-[#6C63FF]/05 border border-[#6C63FF]/10 text-center">
+            <p className="text-sm text-white/60 mb-3">Manual config files are only available for download through our secure dashboard.</p>
+            <a href="/download" className="text-xs font-bold text-[#6C63FF] hover:underline">Download App to Access →</a>
           </div>
-        ))}
-        <a href="/servers" className="text-sm text-[#6C63FF] hover:underline mt-3 block">View all 95+ servers →</a>
+        ) : (
+          <>
+            {serversData?.servers?.slice(0, 5).map(server => (
+              <div key={server._id} className="flex items-center justify-between py-2.5 border-b border-white/[0.05] last:border-0">
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">{server.flag}</span>
+                  <div>
+                    <p className="text-sm font-medium">{server.city}, {server.country}</p>
+                    <p className="text-xs text-white/30">{server.ping}ms · WireGuard</p>
+                  </div>
+                </div>
+                <a href={`/api/vpn/config/${server._id}`} className="btn-ghost text-xs border border-white/[0.08] px-3 py-1.5">
+                  <Download size={12} /> .conf
+                </a>
+              </div>
+            ))}
+            <a href="/servers" className="text-sm text-[#6C63FF] hover:underline mt-3 block">View all 95+ servers →</a>
+          </>
+        )}
       </div>
 
       <div className="glass-card p-6">

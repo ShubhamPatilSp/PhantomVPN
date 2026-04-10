@@ -58,12 +58,14 @@ export default function App() {
           {/* Public */}
           <Route path="/" element={<Landing />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/servers" element={<Servers />} />
-          <Route path="/tools" element={<Tools />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/download" element={<Download />} />
-          <Route path="/leak-test" element={<LeakTest />} />
+          
+          {/* Desktop-only features conditionally blocked on web */}
+          <Route path="/servers" element={isDesktop ? <Servers /> : <Navigate to="/download" replace />} />
+          <Route path="/tools" element={isDesktop ? <Tools /> : <Navigate to="/download" replace />} />
+          <Route path="/leak-test" element={isDesktop ? <LeakTest /> : <Navigate to="/download" replace />} />
 
           {/* Auth */}
           <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />

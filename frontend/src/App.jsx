@@ -43,7 +43,8 @@ const AdminRoute = ({ children }) => {
 
 const GuestRoute = ({ children }) => {
   const { accessToken } = useAuthStore();
-  if (accessToken) return <Navigate to="/dashboard" replace />;
+  const isDesktop = window?.electronAPI !== undefined;
+  if (accessToken) return <Navigate to={isDesktop ? "/dashboard" : "/account"} replace />;
   return children;
 };
 

@@ -29,10 +29,11 @@ export default function Login() {
     const accessToken = searchParams.get('accessToken');
     const refreshToken = searchParams.get('refreshToken');
     const userId = searchParams.get('userId');
+    const isDesktop = !!window.electronAPI;
     if (accessToken && refreshToken && userId) {
       setAuth({ _id: userId }, accessToken, refreshToken);
       toast.success('Signed in with Google!');
-      navigate('/dashboard');
+      navigate(isDesktop ? '/dashboard' : '/account');
     }
   });
 
@@ -50,9 +51,10 @@ export default function Login() {
         setLoading(false);
         return;
       }
+      const isDesktop = !!window.electronAPI;
       setAuth(res.data.user, res.data.accessToken, res.data.refreshToken);
       toast.success(`Welcome back, ${res.data.user.name}!`);
-      navigate('/dashboard');
+      navigate(isDesktop ? '/dashboard' : '/account');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {

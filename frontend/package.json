@@ -3,12 +3,50 @@
   "version": "1.0.0",
   "type": "module",
   "main": "electron/main.cjs",
+  "author": "ShubhamPatilSp",
+  "description": "PhantomVPN — Military-grade VPN with WireGuard encryption. Free, fast, and private.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "desktop:dev": "vite",
-    "desktop:build": "vite build && electron-builder"
+    "desktop:build": "vite build && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.phantomvpn.desktop",
+    "productName": "PhantomVPN",
+    "copyright": "Copyright © 2026 PhantomVPN",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "dist-electron/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+
+      "artifactName": "PhantomVPN-Setup-${version}.${ext}",
+      "signAndEditExecutable": false,
+      "forceCodeSigning": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PhantomVPN",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    }
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",

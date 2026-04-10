@@ -1,10 +1,10 @@
-import require$$0 from "electron";
-var preload = {};
-const { contextBridge, ipcRenderer } = require$$0;
-contextBridge.exposeInMainWorld("electronAPI", {
-  connectVPN: (configContent) => ipcRenderer.invoke("connect-vpn", configContent),
-  disconnectVPN: () => ipcRenderer.invoke("disconnect-vpn")
+import o from "electron";
+var t = {};
+const { contextBridge: c, ipcRenderer: e } = o;
+c.exposeInMainWorld("electronAPI", {
+  connectVPN: (n) => e.invoke("connect-vpn", n),
+  disconnectVPN: () => e.invoke("disconnect-vpn")
 });
 export {
-  preload as default
+  t as default
 };

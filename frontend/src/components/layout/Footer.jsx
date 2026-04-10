@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Github, Twitter, Youtube, Shield } from 'lucide-react';
+import { Github, Twitter, Shield, ArrowUpRight } from 'lucide-react';
 
 const LINKS = {
   Product: [
@@ -7,51 +7,51 @@ const LINKS = {
     { label: 'Pricing', href: '/pricing' },
     { label: 'Servers', href: '/servers' },
     { label: 'Download', href: '/download' },
-    { label: 'Speed Test', href: '/tools' },
   ],
   Privacy: [
     { label: 'Leak Test', href: '/leak-test' },
     { label: 'IP Checker', href: '/tools' },
-    { label: 'DNS Leak Test', href: '/tools' },
+    { label: 'DNS Test', href: '/tools' },
     { label: 'Blog', href: '/blog' },
   ],
   Company: [
     { label: 'About', href: '/about' },
     { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Terms', href: '/terms' },
     { label: 'Contact', href: '/contact' },
   ],
 };
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/[0.06] bg-[#080B14]">
+    <footer className="border-t border-white/[0.04] bg-[#050508]">
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-14">
           {/* Brand */}
           <div className="col-span-2">
-            <Link to="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6C63FF] to-[#00D4FF] flex items-center justify-center text-lg">
-                ⚡
+            <Link to="/" className="flex items-center gap-2.5 mb-5">
+              <div className="w-7 h-7 rounded-lg bg-[#C8FF00] flex items-center justify-center">
+                <Shield size={14} className="text-black" />
               </div>
-              <span className="font-extrabold text-xl tracking-tight">
-                Phantom<span className="bg-gradient-to-r from-[#6C63FF] to-[#00D4FF] bg-clip-text text-transparent">VPN</span>
+              <span className="font-display font-bold text-base tracking-tight">
+                Phantom<span className="text-[#C8FF00]">VPN</span>
               </span>
             </Link>
-            <p className="text-white/50 text-sm leading-relaxed max-w-xs mb-6">
-              Military-grade encryption, zero logs, and 95+ server locations worldwide.
-              Your privacy is our mission.
+            <p className="text-white/30 text-sm leading-relaxed max-w-xs mb-6">
+              Military-grade encryption, zero logs, and 95+ server locations.
+              Your privacy is our entire purpose.
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {[
-                { icon: <Twitter size={16} />, href: '#' },
-                { icon: <Github size={16} />, href: '#' },
-                { icon: <Youtube size={16} />, href: '#' },
+                { icon: <Twitter size={14} />, href: '#' },
+                { icon: <Github size={14} />, href: 'https://github.com/ShubhamPatilSp/PhantomVPN' },
               ].map((s, i) => (
                 <a
                   key={i}
                   href={s.href}
-                  className="w-9 h-9 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.1] transition-all"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-white/60 hover:border-white/[0.1] transition-all"
                 >
                   {s.icon}
                 </a>
@@ -62,13 +62,13 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(LINKS).map(([category, links]) => (
             <div key={category}>
-              <h4 className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-4">{category}</h4>
-              <ul className="space-y-3">
+              <h4 className="text-[10px] font-semibold text-white/20 uppercase tracking-[0.2em] mb-4">{category}</h4>
+              <ul className="space-y-2.5">
                 {links.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <Link
                       to={link.href}
-                      className="text-sm text-white/55 hover:text-white transition-colors"
+                      className="text-sm text-white/35 hover:text-white/70 transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -80,17 +80,16 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/30 text-sm">
+        <div className="pt-8 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-white/20 text-xs">
             © {new Date().getFullYear()} PhantomVPN. All rights reserved.
           </p>
-          <div className="flex items-center gap-2 text-xs text-white/30">
-            <Shield size={12} className="text-[#00FF88]" />
-            <span>256-bit AES Encrypted</span>
-            <span className="mx-1">·</span>
-            <span>Zero Logs Verified</span>
-            <span className="mx-1">·</span>
-            <span>95+ Countries</span>
+          <div className="flex items-center gap-4 text-[10px] text-white/15 uppercase tracking-widest font-medium">
+            <span>AES-256</span>
+            <span className="w-1 h-1 rounded-full bg-white/10" />
+            <span>Zero Logs</span>
+            <span className="w-1 h-1 rounded-full bg-white/10" />
+            <span>WireGuard®</span>
           </div>
         </div>
       </div>

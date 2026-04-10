@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, Menu, X, ChevronDown, Bell, User,
-  LogOut, Settings, LayoutDashboard, Zap
+  LogOut, Settings, LayoutDashboard, Zap, ArrowRight
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { userApi } from '../../api';
@@ -52,36 +52,36 @@ export default function Navbar() {
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-[#080B14]/90 backdrop-blur-xl border-b border-white/[0.06]'
+          ? 'bg-[#050508]/80 backdrop-blur-2xl border-b border-white/[0.04]'
           : 'bg-transparent'
       }`}
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#6C63FF] to-[#00D4FF] flex items-center justify-center text-base shadow-lg group-hover:shadow-[#6C63FF]/40 transition-shadow">
-            ⚡
+          <div className="w-7 h-7 rounded-lg bg-[#C8FF00] flex items-center justify-center transition-shadow group-hover:shadow-lg group-hover:shadow-[#C8FF00]/20">
+            <Shield size={14} className="text-black" />
           </div>
-          <span className="font-extrabold text-lg tracking-tight">
-            Phantom<span className="bg-gradient-to-r from-[#6C63FF] to-[#00D4FF] bg-clip-text text-transparent">VPN</span>
+          <span className="font-display font-bold text-base tracking-tight">
+            Phantom<span className="text-[#C8FF00]">VPN</span>
           </span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-0.5">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               to={link.href}
-              className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 ${
                 location.pathname === link.href
-                  ? 'text-white bg-white/[0.08]'
-                  : 'text-white/60 hover:text-white hover:bg-white/[0.05]'
+                  ? 'text-white bg-white/[0.06]'
+                  : 'text-white/45 hover:text-white/80'
               }`}
             >
               {link.label}
@@ -90,14 +90,14 @@ export default function Navbar() {
         </nav>
 
         {/* Right Side */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2.5">
           {user ? (
             <>
               {/* Notifications */}
-              <Link to="/dashboard" className="relative p-2 rounded-lg hover:bg-white/[0.06] transition-colors">
-                <Bell size={18} className="text-white/60" />
+              <Link to="/dashboard" className="relative p-2 rounded-lg hover:bg-white/[0.04] transition-colors">
+                <Bell size={16} className="text-white/40" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-[#FF6B6B] rounded-full text-[9px] font-bold flex items-center justify-center">
+                  <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-[#C8FF00] rounded-full text-[8px] font-bold flex items-center justify-center text-black">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -107,46 +107,39 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] transition-all"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.06] transition-all text-sm"
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#6C63FF] to-[#00D4FF] flex items-center justify-center text-xs font-bold">
+                  <div className="w-5 h-5 rounded-full bg-[#C8FF00]/20 flex items-center justify-center text-[10px] font-bold text-[#C8FF00]">
                     {user.name?.charAt(0).toUpperCase()}
                   </div>
-                  <span className="text-sm font-medium max-w-[100px] truncate">{user.name}</span>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
-                    user.plan === 'pro' ? 'bg-[#6C63FF]/20 text-[#6C63FF]' :
-                    user.plan === 'business' ? 'bg-[#00D4FF]/20 text-[#00D4FF]' :
-                    'bg-white/10 text-white/50'
-                  }`}>
-                    {user.plan?.toUpperCase()}
-                  </span>
-                  <ChevronDown size={14} className={`text-white/40 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+                  <span className="font-medium text-white/70 max-w-[80px] truncate text-xs">{user.name}</span>
+                  <ChevronDown size={12} className={`text-white/30 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
                   {userMenuOpen && (
                     <motion.div
-                      className="absolute right-0 top-full mt-2 w-56 glass-card border border-white/[0.1] shadow-2xl shadow-black/50 py-1.5"
-                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-white/[0.06] bg-[#0A0A0F] shadow-2xl shadow-black/60 py-1"
+                      initial={{ opacity: 0, y: -8, scale: 0.96 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.96 }}
                       transition={{ duration: 0.15 }}
                     >
-                      <div className="px-3 py-2 border-b border-white/[0.06] mb-1">
-                        <p className="text-sm font-semibold truncate">{user.name}</p>
-                        <p className="text-xs text-white/40 truncate">{user.email}</p>
+                      <div className="px-3 py-2.5 border-b border-white/[0.04] mb-1">
+                        <p className="text-xs font-semibold truncate text-white/80">{user.name}</p>
+                        <p className="text-[10px] text-white/30 truncate mt-0.5">{user.email}</p>
                       </div>
-                      <MenuLink to="/dashboard" icon={<LayoutDashboard size={14} />} label="Dashboard" />
-                      <MenuLink to="/settings" icon={<Settings size={14} />} label="Settings" />
+                      <MenuLink to="/dashboard" icon={<LayoutDashboard size={13} />} label="Dashboard" />
+                      <MenuLink to="/settings" icon={<Settings size={13} />} label="Settings" />
                       {user.role === 'admin' && (
-                        <MenuLink to="/admin" icon={<Shield size={14} />} label="Admin Panel" />
+                        <MenuLink to="/admin" icon={<Shield size={13} />} label="Admin Panel" />
                       )}
-                      <div className="border-t border-white/[0.06] mt-1 pt-1">
+                      <div className="border-t border-white/[0.04] mt-1 pt-1">
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-[#FF6B6B] hover:bg-[#FF6B6B]/10 transition-colors"
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-red-400 hover:bg-red-500/10 transition-colors rounded-lg mx-0"
                         >
-                          <LogOut size={14} />
+                          <LogOut size={13} />
                           Sign out
                         </button>
                       </div>
@@ -157,10 +150,12 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/login" className="btn-ghost text-sm px-4 py-2">Sign in</Link>
-              <Link to="/register" className="btn-primary text-sm px-5 py-2.5">
-                <Zap size={14} />
-                Get Started Free
+              <Link to="/login" className="text-xs font-medium text-white/45 hover:text-white/80 px-3 py-2 transition-colors">
+                Sign in
+              </Link>
+              <Link to="/register" className="btn-primary text-xs px-4 py-2">
+                Get Started
+                <ArrowRight size={12} />
               </Link>
             </>
           )}
@@ -168,10 +163,10 @@ export default function Navbar() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 rounded-lg hover:bg-white/[0.06] transition-colors"
+          className="md:hidden p-2 rounded-lg hover:bg-white/[0.04] transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          {mobileOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
 
@@ -179,36 +174,38 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            className="md:hidden bg-[#080B14]/95 backdrop-blur-xl border-b border-white/[0.06]"
+            className="md:hidden bg-[#050508]/95 backdrop-blur-2xl border-b border-white/[0.04]"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.2 }}
           >
-            <div className="px-4 py-4 flex flex-col gap-1">
+            <div className="px-4 py-4 flex flex-col gap-0.5">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/[0.06] transition-colors"
+                  className="px-4 py-3 rounded-xl text-sm font-medium text-white/50 hover:text-white hover:bg-white/[0.04] transition-colors"
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="border-t border-white/[0.06] mt-2 pt-3 flex flex-col gap-2">
+              <div className="border-t border-white/[0.04] mt-3 pt-3 flex flex-col gap-2">
                 {user ? (
                   <>
                     <Link to="/dashboard" className="btn-secondary text-sm justify-center">
-                      <LayoutDashboard size={16} /> Dashboard
+                      <LayoutDashboard size={14} /> Dashboard
                     </Link>
-                    <button onClick={handleLogout} className="btn-ghost text-[#FF6B6B] justify-center">
-                      <LogOut size={16} /> Sign out
+                    <button onClick={handleLogout} className="btn-ghost text-red-400 justify-center text-sm">
+                      <LogOut size={14} /> Sign out
                     </button>
                   </>
                 ) : (
                   <>
                     <Link to="/login" className="btn-secondary text-sm justify-center">Sign in</Link>
-                    <Link to="/register" className="btn-primary text-sm justify-center"><Zap size={14} /> Get Started Free</Link>
+                    <Link to="/register" className="btn-primary text-sm justify-center">
+                      Get Started <ArrowRight size={14} />
+                    </Link>
                   </>
                 )}
               </div>
@@ -224,7 +221,7 @@ function MenuLink({ to, icon, label }) {
   return (
     <Link
       to={to}
-      className="flex items-center gap-2.5 px-3 py-2 text-sm text-white/70 hover:text-white hover:bg-white/[0.06] transition-colors"
+      className="flex items-center gap-2.5 px-3 py-2 text-xs text-white/50 hover:text-white/80 hover:bg-white/[0.04] transition-colors"
     >
       {icon}
       {label}

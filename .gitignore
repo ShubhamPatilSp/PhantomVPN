@@ -22,6 +22,8 @@ Thumbs.db
 
 # Build outputs
 /frontend/dist/
+/frontend/dist-electron/
+/frontend/release/
 /frontend/build/
 /backend/dist/
 

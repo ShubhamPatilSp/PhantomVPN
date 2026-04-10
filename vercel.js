@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>PhantomVPN — Invisible. Unstoppable. Free.</title>
+  <meta name="description" content="PhantomVPN — Premium VPN with 95+ server locations. Military-grade encryption, zero logs, privacy tools, and lightning-fast speeds. Free forever." />
+  <meta name="keywords" content="VPN, privacy, security, encryption, anonymous browsing, WireGuard, PhantomVPN" />
+  <meta name="author" content="PhantomVPN" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="PhantomVPN" />
+  <meta property="og:title" content="PhantomVPN — Invisible. Unstoppable. Free." />
+  <meta property="og:description" content="Premium VPN with 95+ server locations. Military-grade encryption, zero-log policy." />
+  <meta property="og:url" content="https://phantomvpn.com" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PhantomVPN — Invisible. Unstoppable. Free." />
+  <meta name="twitter:description" content="Premium VPN with 95+ server locations." />
+
+  <!-- PWA -->
+  <meta name="theme-color" content="#6C63FF" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PhantomVPN" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script type="module" crossorigin src="/assets/index-C5hhgRLI.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-B-BQkW1H.css">
+</head>
+<body class="bg-[#080B14] text-white antialiased">
+  <div id="root"></div>
+</body>
+</html>

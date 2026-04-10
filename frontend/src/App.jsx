@@ -12,6 +12,7 @@ const Register = lazy(() => import('./pages/Register'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
+const Account = lazy(() => import('./pages/Account'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Servers = lazy(() => import('./pages/Servers'));
 const Pricing = lazy(() => import('./pages/Pricing'));
@@ -48,6 +49,7 @@ const GuestRoute = ({ children }) => {
 
 export default function App() {
   useSocket();
+  const isDesktop = window?.electronAPI !== undefined;
 
   return (
     <ErrorBoundary>
@@ -71,7 +73,8 @@ export default function App() {
           <Route path="/verify-email" element={<VerifyEmail />} />
 
           {/* Protected */}
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/account" element={<PrivateRoute><Account /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute>{isDesktop ? <Dashboard /> : <Navigate to="/account" replace />}</PrivateRoute>} />
           <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
 
           {/* Admin */}

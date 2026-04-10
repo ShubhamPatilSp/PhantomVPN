@@ -24,6 +24,7 @@ export default function Navbar() {
   const { user, logout } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
+  const isDesktop = !!window.electronAPI;
 
   const { data: notifData } = useQuery({
     queryKey: ['notifications'],
@@ -94,7 +95,7 @@ export default function Navbar() {
           {user ? (
             <>
               {/* Notifications */}
-              <Link to="/dashboard" className="relative p-2 rounded-lg hover:bg-white/[0.04] transition-colors">
+              <Link to={isDesktop ? "/dashboard" : "/account"} className="relative p-2 rounded-lg hover:bg-white/[0.04] transition-colors">
                 <Bell size={16} className="text-white/40" />
                 {unreadCount > 0 && (
                   <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-[#C8FF00] rounded-full text-[8px] font-bold flex items-center justify-center text-black">
@@ -129,7 +130,7 @@ export default function Navbar() {
                         <p className="text-xs font-semibold truncate text-white/80">{user.name}</p>
                         <p className="text-[10px] text-white/30 truncate mt-0.5">{user.email}</p>
                       </div>
-                      <MenuLink to="/dashboard" icon={<LayoutDashboard size={13} />} label="Dashboard" />
+                      <MenuLink to={isDesktop ? "/dashboard" : "/account"} icon={isDesktop ? <LayoutDashboard size={13} /> : <User size={13} />} label={isDesktop ? "Dashboard" : "My Account"} />
                       <MenuLink to="/settings" icon={<Settings size={13} />} label="Settings" />
                       {user.role === 'admin' && (
                         <MenuLink to="/admin" icon={<Shield size={13} />} label="Admin Panel" />
@@ -193,8 +194,8 @@ export default function Navbar() {
               <div className="border-t border-white/[0.04] mt-3 pt-3 flex flex-col gap-2">
                 {user ? (
                   <>
-                    <Link to="/dashboard" className="btn-secondary text-sm justify-center">
-                      <LayoutDashboard size={14} /> Dashboard
+                    <Link to={isDesktop ? "/dashboard" : "/account"} className="btn-secondary text-sm justify-center">
+                      {isDesktop ? <LayoutDashboard size={14} /> : <User size={14} />} {isDesktop ? "Dashboard" : "My Account"}
                     </Link>
                     <button onClick={handleLogout} className="btn-ghost text-red-400 justify-center text-sm">
                       <LogOut size={14} /> Sign out

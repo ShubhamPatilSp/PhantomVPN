@@ -43,6 +43,7 @@ function LoadBar({ value }) {
 function ServerCard({ server, onConnect, onDisconnect, connecting }) {
   const { user } = useAuthStore();
   const { connected, connection } = useVpnStore();
+  const isDesktop = !!window.electronAPI;
   const isConnected = connected && connection?.server?.id === server._id;
   const isLocked = server.isPremium && user?.plan === 'free';
 
@@ -94,19 +95,25 @@ function ServerCard({ server, onConnect, onDisconnect, connecting }) {
         <button
           onClick={() => {
             if (isLocked || connecting) return;
+            if (!isDesktop) {
+              window.location.href = '/download';
+              return;
+            }
             if (isConnected) onDisconnect();
             else onConnect(server._id);
           }}
-          disabled={connecting || isLocked}
+          disabled={connecting || (isLocked && isDesktop)}
           className={`text-xs px-4 py-1.5 rounded-lg font-semibold transition-all ${
-            isConnected
+            !isDesktop
+              ? 'bg-[#6C63FF]/15 text-[#6C63FF] border border-[#6C63FF]/20 hover:bg-[#6C63FF]/25'
+              : isConnected
               ? 'bg-[#FF6B6B]/15 text-[#FF6B6B] border border-[#FF6B6B]/20 hover:bg-[#FF6B6B]/25'
               : isLocked
               ? 'bg-white/[0.04] text-white/25 border border-white/[0.06] cursor-not-allowed'
               : 'bg-[#6C63FF]/15 text-[#6C63FF] border border-[#6C63FF]/20 hover:bg-[#6C63FF]/25'
           }`}
         >
-          {isConnected ? 'Disconnect' : isLocked ? '🔒 Pro' : connecting ? '...' : 'Connect'}
+          {!isDesktop ? 'Get App' : isConnected ? 'Disconnect' : isLocked ? '🔒 Pro' : connecting ? '...' : 'Connect'}
         </button>
       </div>
     </motion.div>

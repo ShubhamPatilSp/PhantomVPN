@@ -1,19 +1,12 @@
 import v from "electron";
 import y from "node:path";
 import R from "node:fs";
-import "child_process";
-import "crypto";
-import "fs";
-import "os";
-import "path";
-import "util";
 import W from "node:child_process";
-var A = {};
-process;
-const { app: t, BrowserWindow: w, ipcMain: h, dialog: T } = v, n = y, i = R, { exec: g } = W;
-let m;
-function p() {
-  m = new w({
+var V = {};
+const { app: n, BrowserWindow: h, ipcMain: p, dialog: _ } = v, r = y, s = R, { exec: g } = W;
+let d;
+function w() {
+  d = new h({
     width: 1200,
     height: 800,
     minWidth: 900,
@@ -21,55 +14,55 @@ function p() {
     titleBarStyle: "hiddenInset",
     // Modern OS integration styling
     webPreferences: {
-      preload: n.join(__dirname, "preload.cjs"),
+      preload: r.join(__dirname, "preload.cjs"),
       nodeIntegration: !1,
       contextIsolation: !0
     }
-  }), process.env.VITE_DEV_SERVER_URL ? m.loadURL(process.env.VITE_DEV_SERVER_URL) : m.loadFile(n.join(__dirname, "../dist/index.html"));
+  }), process.env.VITE_DEV_SERVER_URL ? d.loadURL(process.env.VITE_DEV_SERVER_URL) : d.loadFile(r.join(__dirname, "../dist/index.html"));
 }
-t.whenReady().then(() => {
-  p(), t.on("activate", () => {
-    w.getAllWindows().length === 0 && p();
+n.whenReady().then(() => {
+  w(), n.on("activate", () => {
+    h.getAllWindows().length === 0 && w();
   });
 });
-t.on("window-all-closed", () => {
-  process.platform !== "darwin" && t.quit();
+n.on("window-all-closed", () => {
+  process.platform !== "darwin" && n.quit();
 });
 const f = () => {
-  const o = [
+  const i = [
     "C:\\Program Files\\WireGuard\\wireguard.exe",
     "C:\\Program Files (x86)\\WireGuard\\wireguard.exe"
   ];
-  for (const e of o)
-    if (i.existsSync(e)) return `"${e}"`;
+  for (const e of i)
+    if (s.existsSync(e)) return `"${e}"`;
   return null;
-}, d = n.join(t.getPath("userData"), "VPNConfigs");
-i.existsSync(d) || i.mkdirSync(d, { recursive: !0 });
-h.handle("connect-vpn", async (o, e) => {
+}, u = r.join(n.getPath("userData"), "VPNConfigs");
+s.existsSync(u) || s.mkdirSync(u, { recursive: !0 });
+p.handle("connect-vpn", async (i, e) => {
   try {
-    const r = f();
-    if (!r)
+    const t = f();
+    if (!t)
       throw new Error("WireGuard for Windows is not installed. Please download it from wireguard.com/install/");
-    const s = r.replace(/"/g, ""), a = n.join(d, "phantom.conf");
-    return i.writeFileSync(a, e, "utf8"), new Promise((c, u) => {
-      const P = `powershell.exe -Command "Start-Process -FilePath '${s}' -ArgumentList '/installtunnelservice', '${a}' -Verb RunAs -WindowStyle Hidden"`;
+    const o = t.replace(/"/g, ""), a = r.join(u, "phantom.conf");
+    return s.writeFileSync(a, e, "utf8"), new Promise((c, m) => {
+      const P = `powershell.exe -Command "Start-Process -FilePath '${o}' -ArgumentList '/installtunnelservice', '${a}' -Verb RunAs -WindowStyle Hidden"`;
       g(P, (l) => {
-        l ? (console.error("VPN Connect Error:", l), u(l.message || "Failed to request Admin privileges")) : setTimeout(() => c({ success: !0, message: "Tunnel active" }), 1e3);
+        l ? (console.error("VPN Connect Error:", l), m(l.message || "Failed to request Admin privileges")) : setTimeout(() => c({ success: !0, message: "Tunnel active" }), 1e3);
       });
     });
-  } catch (r) {
-    return Promise.reject(r.message);
+  } catch (t) {
+    return Promise.reject(t.message);
   }
 });
-h.handle("disconnect-vpn", async (o) => {
+p.handle("disconnect-vpn", async (i) => {
   try {
     const e = f();
     if (!e) return { success: !0 };
-    const r = e.replace(/"/g, "");
-    return new Promise((s, a) => {
-      const c = `powershell.exe -Command "Start-Process -FilePath '${r}' -ArgumentList '/uninstalltunnelservice', 'phantom' -Verb RunAs -WindowStyle Hidden"`;
-      g(c, (u) => {
-        setTimeout(() => s({ success: !0, message: "Tunnel inactive" }), 500);
+    const t = e.replace(/"/g, "");
+    return new Promise((o, a) => {
+      const c = `powershell.exe -Command "Start-Process -FilePath '${t}' -ArgumentList '/uninstalltunnelservice', 'phantom' -Verb RunAs -WindowStyle Hidden"`;
+      g(c, (m) => {
+        setTimeout(() => o({ success: !0, message: "Tunnel inactive" }), 500);
       });
     });
   } catch {
@@ -77,5 +70,5 @@ h.handle("disconnect-vpn", async (o) => {
   }
 });
 export {
-  A as default
+  V as default
 };

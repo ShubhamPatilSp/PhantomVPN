@@ -1,15 +1,12 @@
-import require$$0 from "electron";
-import require$$1 from "node:path";
-import require$$2 from "node:fs";
-import require$$3 from "node:child_process";
-var main = {};
-const { app, BrowserWindow, ipcMain, dialog } = require$$0;
-const path = require$$1;
-const fs = require$$2;
-const { exec } = require$$3;
-let mainWindow;
-function createWindow() {
-  mainWindow = new BrowserWindow({
+import v from "electron";
+import y from "node:path";
+import R from "node:fs";
+import W from "node:child_process";
+var V = {};
+const { app: n, BrowserWindow: h, ipcMain: p, dialog: _ } = v, r = y, s = R, { exec: g } = W;
+let d;
+function w() {
+  d = new h({
     width: 1200,
     height: 800,
     minWidth: 900,
@@ -17,83 +14,61 @@ function createWindow() {
     titleBarStyle: "hiddenInset",
     // Modern OS integration styling
     webPreferences: {
-      preload: path.join(__dirname, "preload.cjs"),
-      nodeIntegration: false,
-      contextIsolation: true
+      preload: r.join(__dirname, "preload.cjs"),
+      nodeIntegration: !1,
+      contextIsolation: !0
     }
-  });
-  if (process.env.VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
-  } else {
-    mainWindow.loadFile(path.join(__dirname, "../dist/index.html"));
-  }
+  }), process.env.VITE_DEV_SERVER_URL ? d.loadURL(process.env.VITE_DEV_SERVER_URL) : d.loadFile(r.join(__dirname, "../dist/index.html"));
 }
-app.whenReady().then(() => {
-  createWindow();
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
+n.whenReady().then(() => {
+  w(), n.on("activate", () => {
+    h.getAllWindows().length === 0 && w();
   });
 });
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+n.on("window-all-closed", () => {
+  process.platform !== "darwin" && n.quit();
 });
-const getWireguardPath = () => {
-  const paths = [
+const f = () => {
+  const i = [
     "C:\\Program Files\\WireGuard\\wireguard.exe",
     "C:\\Program Files (x86)\\WireGuard\\wireguard.exe"
   ];
-  for (const p of paths) {
-    if (fs.existsSync(p)) return `"${p}"`;
-  }
+  for (const e of i)
+    if (s.existsSync(e)) return `"${e}"`;
   return null;
-};
-const phantomDir = path.join(app.getPath("userData"), "VPNConfigs");
-if (!fs.existsSync(phantomDir)) {
-  fs.mkdirSync(phantomDir, { recursive: true });
-}
-ipcMain.handle("connect-vpn", async (event, configContent) => {
+}, u = r.join(n.getPath("userData"), "VPNConfigs");
+s.existsSync(u) || s.mkdirSync(u, { recursive: !0 });
+p.handle("connect-vpn", async (i, e) => {
   try {
-    const wgPathRaw = getWireguardPath();
-    if (!wgPathRaw) {
+    const t = f();
+    if (!t)
       throw new Error("WireGuard for Windows is not installed. Please download it from wireguard.com/install/");
-    }
-    const wgPath = wgPathRaw.replace(/"/g, "");
-    const confPath = path.join(phantomDir, "phantom.conf");
-    fs.writeFileSync(confPath, configContent, "utf8");
-    return new Promise((resolve, reject) => {
-      const psCommand = `powershell.exe -Command "Start-Process -FilePath '${wgPath}' -ArgumentList '/installtunnelservice', '${confPath}' -Verb RunAs -WindowStyle Hidden"`;
-      exec(psCommand, (error) => {
-        if (error) {
-          console.error("VPN Connect Error:", error);
-          reject(error.message || "Failed to request Admin privileges");
-        } else {
-          setTimeout(() => resolve({ success: true, message: "Tunnel active" }), 1e3);
-        }
+    const o = t.replace(/"/g, ""), a = r.join(u, "phantom.conf");
+    return s.writeFileSync(a, e, "utf8"), new Promise((c, m) => {
+      const P = `powershell.exe -Command "Start-Process -FilePath '${o}' -ArgumentList '/installtunnelservice', '${a}' -Verb RunAs -WindowStyle Hidden"`;
+      g(P, (l) => {
+        l ? (console.error("VPN Connect Error:", l), m(l.message || "Failed to request Admin privileges")) : setTimeout(() => c({ success: !0, message: "Tunnel active" }), 1e3);
       });
     });
-  } catch (err) {
-    return Promise.reject(err.message);
+  } catch (t) {
+    return Promise.reject(t.message);
   }
 });
-ipcMain.handle("disconnect-vpn", async (event) => {
+p.handle("disconnect-vpn", async (i) => {
   try {
-    const wgPathRaw = getWireguardPath();
-    if (!wgPathRaw) return { success: true };
-    const wgPath = wgPathRaw.replace(/"/g, "");
-    return new Promise((resolve, reject) => {
-      const psCommand = `powershell.exe -Command "Start-Process -FilePath '${wgPath}' -ArgumentList '/uninstalltunnelservice', 'phantom' -Verb RunAs -WindowStyle Hidden"`;
-      exec(psCommand, (error) => {
-        setTimeout(() => resolve({ success: true, message: "Tunnel inactive" }), 500);
+    const e = f();
+    if (!e) return { success: !0 };
+    const t = e.replace(/"/g, "");
+    return new Promise((o, a) => {
+      const c = `powershell.exe -Command "Start-Process -FilePath '${t}' -ArgumentList '/uninstalltunnelservice', 'phantom' -Verb RunAs -WindowStyle Hidden"`;
+      g(c, (m) => {
+        setTimeout(() => o({ success: !0, message: "Tunnel inactive" }), 500);
       });
     });
-  } catch (err) {
-    return Promise.resolve({ success: true });
+  } catch {
+    return Promise.resolve({ success: !0 });
   }
 });
 export {
-  main as default
+  V as default
 };

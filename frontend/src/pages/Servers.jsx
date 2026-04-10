@@ -40,7 +40,7 @@ function LoadBar({ value }) {
   );
 }
 
-function ServerCard({ server, onConnect, connecting }) {
+function ServerCard({ server, onConnect, onDisconnect, connecting }) {
   const { user } = useAuthStore();
   const { connected, connection } = useVpnStore();
   const isConnected = connected && connection?.server?.id === server._id;
@@ -92,17 +92,21 @@ function ServerCard({ server, onConnect, connecting }) {
           )}
         </div>
         <button
-          onClick={() => !isLocked && onConnect(server._id)}
-          disabled={connecting || isConnected || isLocked}
+          onClick={() => {
+            if (isLocked || connecting) return;
+            if (isConnected) onDisconnect();
+            else onConnect(server._id);
+          }}
+          disabled={connecting || isLocked}
           className={`text-xs px-4 py-1.5 rounded-lg font-semibold transition-all ${
             isConnected
-              ? 'bg-[#00FF88]/15 text-[#00FF88] border border-[#00FF88]/20'
+              ? 'bg-[#FF6B6B]/15 text-[#FF6B6B] border border-[#FF6B6B]/20 hover:bg-[#FF6B6B]/25'
               : isLocked
               ? 'bg-white/[0.04] text-white/25 border border-white/[0.06] cursor-not-allowed'
               : 'bg-[#6C63FF]/15 text-[#6C63FF] border border-[#6C63FF]/20 hover:bg-[#6C63FF]/25'
           }`}
         >
-          {isConnected ? '✓ Connected' : isLocked ? '🔒 Pro' : connecting ? '...' : 'Connect'}
+          {isConnected ? 'Disconnect' : isLocked ? '🔒 Pro' : connecting ? '...' : 'Connect'}
         </button>
       </div>
     </motion.div>
@@ -116,7 +120,7 @@ export default function Servers() {
   const [streaming, setStreaming] = useState(false);
   const [p2p, setP2P] = useState(false);
   const { user } = useAuthStore();
-  const { connect, setConnecting, connecting } = useVpnStore();
+  const { connect, disconnect, setConnecting, connecting } = useVpnStore();
 
   const { data, isLoading } = useQuery({
     queryKey: ['servers', region, sort],
@@ -147,6 +151,15 @@ export default function Servers() {
       setConnecting(false);
       toast.error(err.response?.data?.message || 'Connection failed');
     },
+  });
+
+  const disconnectMutation = useMutation({
+    mutationFn: () => vpnApi.disconnect(),
+    onSuccess: () => {
+      disconnect();
+      toast.success('Disconnected successfully');
+    },
+    onError: () => toast.error('Disconnection failed'),
   });
 
   return (
@@ -249,7 +262,8 @@ export default function Servers() {
                 key={server._id}
                 server={server}
                 onConnect={connectMutation.mutate}
-                connecting={connectMutation.isPending}
+                onDisconnect={disconnectMutation.mutate}
+                connecting={connectMutation.isPending || disconnectMutation.isPending}
               />
             ))}
           </motion.div>

@@ -1,0 +1,99 @@
+version: '3.9'
+
+services:
+  # ── MongoDB ──────────────────────────────────────────────────────
+  mongodb:
+    image: mongo:7
+    container_name: phantomvpn-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: phantom
+      MONGO_INITDB_ROOT_PASSWORD: phantom_secure_pwd
+      MONGO_INITDB_DATABASE: phantomvpn
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - '27017:27017'
+    networks:
+      - phantom_net
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', 'db.adminCommand("ping")']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: phantomvpn-redis
+    restart: unless-stopped
+    command: redis-server --requirepass redis_secure_pwd
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - phantom_net
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend ──────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: phantomvpn-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://phantom:phantom_secure_pwd@mongodb:27017/phantomvpn?authSource=admin
+      REDIS_URL: redis://:redis_secure_pwd@redis:6379
+      JWT_SECRET: ${JWT_SECRET:-change_this_jwt_secret_in_production_minimum_64_chars}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change_this_refresh_secret_in_production_minimum_64_chars}
+      JWT_EXPIRE: 15m
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+    ports:
+      - '5000:5000'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - phantom_net
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # ── Frontend ─────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: phantomvpn-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:5000/api
+      VITE_SOCKET_URL: http://localhost:5000
+    ports:
+      - '5173:80'
+    depends_on:
+      - backend
+    networks:
+      - phantom_net
+
+volumes:
+  mongo_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  phantom_net:
+    driver: bridge

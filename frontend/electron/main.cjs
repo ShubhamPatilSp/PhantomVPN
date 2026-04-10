@@ -2,7 +2,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
-const sudo = require('sudo-prompt');
 const { exec } = require('node:child_process');
 
 let mainWindow;
